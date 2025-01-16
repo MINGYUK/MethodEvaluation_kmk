@@ -303,10 +303,11 @@ packageOhdsiBenchmarkResults <- function(estimates,
       subset$calSeLogRr <- subset$seLogRr
       subset$calCi95Lb <- exp(subset$logLb95Rr)
       subset$calCi95Ub <- exp(subset$logUb95Rr)
-      subset$calP <- EmpiricalCalibration::calibrateP(
+      subset$calP <- rep(NA, nrow(subset))
+      subset[!is.na(subset$seLogRr) & !is.infinite(subset$seLogRr), ]$calP = EmpiricalCalibration::calibrateP(
           null = null,
-          logRr = subset$logRr,
-          seLogRr = subset$seLogRr
+          logRr = subset[!is.na(subset$seLogRr) & !is.infinite(subset$seLogRr), ]$logRr,
+          seLogRr = subset[!is.na(subset$seLogRr) & !is.infinite(subset$seLogRr), ]$seLogRr
         )
     }
     else {
