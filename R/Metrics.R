@@ -301,14 +301,9 @@ packageOhdsiBenchmarkResults <- function(estimates,
     else if (length(unique(subset$leaveOutUnit)) < 2){
       subset$calLogRr <- subset$logRr
       subset$calSeLogRr <- subset$seLogRr
-      subset$calCi95Lb <- exp(subset$logLb95Rr)
-      subset$calCi95Ub <- exp(subset$logUb95Rr)
+      subset$calCi95Lb = subset$ci95Lb
+      subset$calCi95Ub = subset$ci95Ub
       subset$calP <- rep(NA, nrow(subset))
-      subset[!is.na(subset$seLogRr) & !is.infinite(subset$seLogRr), ]$calP = EmpiricalCalibration::calibrateP(
-          null = null,
-          logRr = subset[!is.na(subset$seLogRr) & !is.infinite(subset$seLogRr), ]$logRr,
-          seLogRr = subset[!is.na(subset$seLogRr) & !is.infinite(subset$seLogRr), ]$seLogRr
-        )
     }
     else {
       # Use leave-one out when calibrating to not overestimate
