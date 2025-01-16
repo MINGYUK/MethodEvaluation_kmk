@@ -295,7 +295,21 @@ packageOhdsiBenchmarkResults <- function(estimates,
       subset$calCi95Lb <- rep(NA, nrow(subset))
       subset$calCi95Ub <- rep(NA, nrow(subset))
       subset$calP <- rep(NA, nrow(subset))
-    } else {
+    }
+    # If not possible to perform leave-one-out calibration,
+    # Just use the original ones.
+    else if (length(unique(subset$leaveOutUnit)) < 2){
+      subset$calLogRr <- subset$logRr
+      subset$calSeLogRr <- subset$seLogRr
+      subset$calCi95Lb <- exp(subset$logLb95Rr)
+      subset$calCi95Ub <- exp(subset$logUb95Rr)
+      subset$calP <- EmpiricalCalibration::calibrateP(
+          null = null,
+          logRr = subset$logRr,
+          seLogRr = subset$seLogRr
+        )
+    }
+    else {
       # Use leave-one out when calibrating to not overestimate
       calibrateLeaveOneOut <- function(leaveOutUnit) {
         subsetMinusOne <- filterSubset[filterSubset$leaveOutUnit != leaveOutUnit, ]
